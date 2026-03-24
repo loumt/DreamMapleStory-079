@@ -1,0 +1,26 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>cn.dream</groupId>
+        <artifactId>DreamMapleStory</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+    <artifactId>dm-common</artifactId>
+    <packaging>pom</packaging>
+    <name>dm-common</name>
+    <description>通用模块</description>
+
+    <modules>
+        <module>dm-common-bom</module>
+
+        <module>dm-common-core</module>
+        <module>dm-common-log</module>
+        <module>dm-common-domain</module>
+        <module>dm-common-filesystem</module>
+        <module>dm-common-mybatis</module>
+        <module>dm-common-web</module>
+        <module>dm-common-doc</module>
+        <module>dm-common-maple</module>
+    </modules>
+</project>

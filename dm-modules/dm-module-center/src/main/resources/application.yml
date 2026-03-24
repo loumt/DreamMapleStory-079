@@ -1,0 +1,32 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/dream-maple-story?rewriteBatchedStatements=true&useUnicode=true&characterEncoding-utf8&allowMultiQueries=true&serverTimezone=GMT%2B8
+    username: root
+    password: root
+    druid:
+      filters: stat
+      maxActive: 20
+      initialSize: 1
+      maxWait: 60000
+      minIdle: 1
+      timeBetweenEvictionRunsMillis: 60000
+      minEvictableIdleTimeMillis: 300000
+      validationQuery: select 'x'
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+      poolPreparedStatements: true
+      maxOpenPreparedStatements: 20
+      db-type: com.alibaba.druid.pool.DruidDataSource
+  main:
+    allow-circular-references: true
+    allow-bean-definition-overriding: true
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      logic-delete-field: delete
+      logic-not-delete-value: '0'
+      logic-delete-value: '1'

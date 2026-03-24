@@ -1,0 +1,20 @@
+version: '3.1'
+services:
+  nacos:
+    image: nacos/nacos-server:v2.2.0
+    restart: unless-stopped
+    container_name: jri-nacos
+    environment:
+      - MODE=standalone
+      - SPRING_DATASOURCE_PLATFORM=mysql
+      - MYSQL_SERVICE_HOST=mysql
+      - MYSQL_SERVICE_DB_NAME=nacos
+      - MYSQL_SERVICE_DB_PARAM=serverTimezone=Asia/Shanghai&characterEncoding=utf8&useUnicode=true&useSSL=false
+      - MYSQL_SERVICE_USER=root
+      - MYSQL_SERVICE_PASSWORD=123456
+    volumes:
+      - ./volumes/nacos/logs:/home/nacos/logs
+    ports:
+      - "8848:8848"
+      - "9848:9848"
+      - "7848:7848"

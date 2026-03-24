@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>cn.dream</groupId>
+    <artifactId>DreamMapleStory</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+
+    <name>DreamMapleStory-V079</name>
+    <description>
+        Dream MapleStory V079 - Build With Spring 3
+    </description>
+    <packaging>pom</packaging>
+
+    <properties>
+        <dream.version>1.0.0-SNAPSHOT</dream.version>
+        <java.version>17</java.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <!-- docker -->
+        <docker.image.tag>dev</docker.image.tag>
+        <docker.registry>172.16.9.100:8083</docker.registry>
+        <docker.registry.namespace>mediate</docker.registry.namespace>
+
+        <!-- dependence version -->
+        <!--核心框架-->
+        <spring-boot.version>3.5.9</spring-boot.version>
+        <springdoc.version>3.0.0</springdoc.version>
+
+        <!--数据库-->
+        <mysql.version>8.0.33</mysql.version>
+        <hikari.version>7.0.2</hikari.version>
+        <dynamic-ds.version>4.5.0</dynamic-ds.version>
+        <mybatis.version>3.5.16</mybatis.version>
+        <mybatis-plus.version>3.5.14</mybatis-plus.version>
+
+        <!-- 文件服务 -->
+        <minio.version>8.5.17</minio.version>
+
+        <!-- 工具 -->
+        <netty.version>4.2.7.Final</netty.version>
+        <lombok.version>1.18.38</lombok.version>
+        <fastjson.version>2.0.58</fastjson.version>
+        <hutool.version>5.8.39</hutool.version>
+        <common-lang3.version>3.18.0</common-lang3.version>
+        <guava.version>33.4.8-jre</guava.version>
+
+        <!-- plugin version -->
+        <plugin-jar.version>3.4.2</plugin-jar.version>
+        <plugin-war.version>3.4.0</plugin-war.version>
+        <plugin-dockerfile.version>1.4.13</plugin-dockerfile.version>
+        <plugin-compiler.version>3.10.0</plugin-compiler.version>
+
+        <!-- 打包默认跳过测试 -->
+        <skipTests>true</skipTests>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- SpringBoot的依赖配置-->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- JSON 解析器和生成器 -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson.version}</version>
+            </dependency>
+
+            <!-- Mysql Connector -->
+            <dependency>
+                <groupId>com.mysql</groupId>
+                <artifactId>mysql-connector-j</artifactId>
+                <version>${mysql.version}</version>
+            </dependency>
+
+            <!-- HikariCP -->
+            <dependency>
+                <groupId>com.zaxxer</groupId>
+                <artifactId>HikariCP</artifactId>
+                <version>${hikari.version}</version>
+            </dependency>
+
+            <!-- dynamic-datasource 多数据源-->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>dynamic-datasource-spring-boot3-starter</artifactId>
+                <version>${dynamic-ds.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
+
+            <!-- ORM mybatis mybatis-plus -->
+            <!--数据库-->
+            <dependency>
+                <groupId>org.mybatis</groupId>
+                <artifactId>mybatis</artifactId>
+                <version>${mybatis.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-jsqlparser</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-core</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-extension</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-annotation</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+
+            <!-- springdoc -->
+            <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+                <version>${springdoc.version}</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <!-- guava -->
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.minio</groupId>
+                <artifactId>minio</artifactId>
+                <version>${minio.version}</version>
+            </dependency>
+
+            <!-- netty -->
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-all</artifactId>
+                <version>${netty.version}</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${common-lang3.version}</version>
+            </dependency>
+
+            <!-- dm -->
+            <dependency>
+                <groupId>cn.dream</groupId>
+                <artifactId>dm-common-domain</artifactId>
+                <version>${dream.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.dream</groupId>
+                <artifactId>dm-common-core</artifactId>
+                <version>${dream.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.dream</groupId>
+                <artifactId>dm-common-maple</artifactId>
+                <version>${dream.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.dream</groupId>
+                <artifactId>dm-common-log</artifactId>
+                <version>${dream.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.dream</groupId>
+                <artifactId>dm-common-filesystem</artifactId>
+                <version>${dream.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.dream</groupId>
+                <artifactId>dm-common-mybatis</artifactId>
+                <version>${dream.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.dream</groupId>
+                <artifactId>dm-common-web</artifactId>
+                <version>${dream.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <modules>
+        <module>dm-common</module>
+        <module>dm-modules</module>
+    </modules>
+
+    <repositories>
+        <!-- 镜像仓库，加速访问，不需要的话，可以注释掉 -->
+        <repository>
+            <id>aliyun-nexus</id>
+            <url>https://maven.aliyun.com/repository/public</url>
+        </repository>
+        <repository>
+            <id>maven</id>
+            <url>https://repo1.maven.org/maven2/</url>
+        </repository>
+    </repositories>
+
+    <distributionManagement>
+        <repository>
+            <id>local-releases</id>
+            <name>local release</name>
+<!--            <url>http://106.14.70.28:18081/repository/maven-releases/</url>-->
+            <url>http://172.16.9.100:8081/repository/maven-releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>local-snapshots</id>
+            <name>local snapshots</name>
+<!--            <url>http://106.14.70.28:18081/repository/maven-snapshots/</url>-->
+            <url>http://172.16.9.100:8081/repository/maven-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+</project>

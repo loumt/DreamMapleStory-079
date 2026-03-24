@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ms.dm.server.database.mapper.ItemInventoryMapper">
+    <resultMap type="cn.ms.dm.domain.inventory.vo.ItemInventoryEquipmentVO" id="inventoryEquipmentRM">
+        <result property="itemId" column="item_id"/>
+        <result property="position" column="position"/>
+        <result property="level" column="level"/>
+        <result property="strength" column="strength"/>
+        <result property="dexterity" column="dexterity"/>
+        <result property="luck" column="luck"/>
+        <result property="intelligence" column="intelligence"/>
+        <result property="speed" column="speed"/>
+        <result property="hands" column="hands"/>
+        <result property="jump" column="jump"/>
+    </resultMap>
+
+
+    <sql id="columns">
+        ii.type, ii.item_id, ii.position,  iie.level,
+        iie.strength, iie.dexterity, iie.luck, iie.intelligence,
+        iie.speed, iie.hands, iie.jump
+    </sql>
+
+    <select id="loadEquip" resultMap="inventoryEquipmentRM">
+        SELECT
+            <include refid="columns"/>
+        FROM item_inventory ii
+        LEFT JOIN item_inventory_equipment iie USING(`item_id`)
+        WHERE ii.type = #{type}
+        AND ii.character_id = #{characterId}
+    </select>
+
+
+</mapper>

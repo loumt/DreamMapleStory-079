@@ -1,0 +1,1 @@
+mvn clean package -U -s D:\apache-maven-3.6.0\conf\settings-lmt.xml

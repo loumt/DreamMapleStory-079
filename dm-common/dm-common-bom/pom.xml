@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>cn.dream</groupId>
+    <artifactId>dm-common-bom</artifactId>
+    <version>${dream.version}</version>
+    <packaging>pom</packaging>
+
+    <description>
+        dm-common-bom
+    </description>
+
+    <properties>
+        <dream.version>1.0.0-SNAPSHOT</dream.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>cn.dream</groupId>
+                <artifactId>dm-common-domain</artifactId>
+                <version>${dream.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.dream</groupId>
+                <artifactId>dm-common-core</artifactId>
+                <version>${dream.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.dream</groupId>
+                <artifactId>dm-common-maple</artifactId>
+                <version>${dream.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.dream</groupId>
+                <artifactId>dm-common-log</artifactId>
+                <version>${dream.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.dream</groupId>
+                <artifactId>dm-common-filesystem</artifactId>
+                <version>${dream.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.dream</groupId>
+                <artifactId>dm-common-mybatis</artifactId>
+                <version>${dream.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.dream</groupId>
+                <artifactId>dm-common-web</artifactId>
+                <version>${dream.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>
