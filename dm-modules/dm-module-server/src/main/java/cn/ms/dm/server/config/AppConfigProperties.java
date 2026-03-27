@@ -39,6 +39,11 @@ public class AppConfigProperties {
     @Value("${maple.admin: false}")
     private Boolean admin;
     /**
+     * IP地址
+     */
+    @Value("${maple.ip: 127.0.0.1}")
+    private String ip;
+    /**
      * 登录服务器端口
      */
     @Value("${maple.login.port: 8484}")
@@ -67,13 +72,20 @@ public class AppConfigProperties {
     @Value("${maple.login.login-attempt:5}")
     private Integer loginAttemptCount;
 
+    /**
+     * 创建家族所需要的金币数
+     */
+    @Value("${maple.guild.cost:500000}")
+    private Integer guildCost;
 
     public static Integer LOGIN_SERVER_PORT;
     public static Integer LOGIN_ATTEMPT_COUNT;
     public static Short MAPLE_VERSION;
+    public static String MAPLE_IP;
     public static Integer CASH_SHOP_SERVER_PORT;
     public static Integer CHANNEL_DEFAULT_PORT;
     public static Integer CHANNEL_COUNT;
+    public static Integer GUILD_CREATE_COST;
 
     @PostConstruct
     public void init(){
@@ -82,6 +94,8 @@ public class AppConfigProperties {
         CHANNEL_COUNT = channelCount;
         CHANNEL_DEFAULT_PORT = channelDefaultPort;
         MAPLE_VERSION = version;
+        MAPLE_IP = ip;
         LOGIN_ATTEMPT_COUNT = loginAttemptCount;
+        GUILD_CREATE_COST = guildCost;
     }
 }

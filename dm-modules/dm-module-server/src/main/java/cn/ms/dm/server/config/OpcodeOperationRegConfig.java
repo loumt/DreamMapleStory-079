@@ -1,7 +1,7 @@
 package cn.ms.dm.server.config;
 
 import cn.ms.dm.maple.annotation.PacketHandler;
-import cn.ms.dm.maple.constant.ReceivePacketOpcode;
+import cn.ms.dm.maple.constant.packet.ReceivePacketOpcode;
 import cn.ms.dm.server.operation.PacketOperation;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;

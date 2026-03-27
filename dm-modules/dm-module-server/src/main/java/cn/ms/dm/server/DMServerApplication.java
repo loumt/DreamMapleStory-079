@@ -2,6 +2,7 @@ package cn.ms.dm.server;
 
 import cn.ms.dm.core.domain.Pair;
 import cn.ms.dm.maple.base.IMapleItem;
+import cn.ms.dm.maple.constant.account.CharacterStat;
 import cn.ms.dm.maple.constant.inventory.MapleInventoryType;
 import cn.ms.dm.maple.wz.base.MapleData;
 import cn.ms.dm.server.config.AppConfigProperties;
@@ -23,6 +24,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.Order;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
+import java.util.EnumMap;
 import java.util.Map;
 
 /**

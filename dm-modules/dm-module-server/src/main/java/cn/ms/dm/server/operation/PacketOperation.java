@@ -1,6 +1,6 @@
 package cn.ms.dm.server.operation;
 
-import cn.ms.dm.maple.constant.ReceivePacketOpcode;
+import cn.ms.dm.maple.constant.packet.ReceivePacketOpcode;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.invoke.MethodHandle;
@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @name MapleExecutor
  * @date 2026-02-25 16:23
  * @email lmtemail163@163.com
- * @description
+ * @description 包处理函数集合
  */
 @Slf4j(topic = "[指令注册]")
 public class PacketOperation {

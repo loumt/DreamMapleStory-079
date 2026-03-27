@@ -10,7 +10,7 @@ CREATE TABLE `dm_account`
     `banned`       tinyint(1) NOT NULL DEFAULT '0' COMMENT '禁用',
     `ban_reason`   varchar(255) DEFAULT NULL COMMENT '禁用原因',
     `gm`           tinyint(1) NOT NULL DEFAULT '0' COMMENT 'GM标识位',
-    `meso`         int(11) DEFAULT '0' COMMENT '点券数',
+    `cash`         int(11) DEFAULT '0' COMMENT '点券数',
     `is_delete`    tinyint(1) NOT NULL DEFAULT '0' COMMENT '删除标志位 0未删除 1已删除',
     `create_time`  datetime     DEFAULT NULL COMMENT '创建时间',
     PRIMARY KEY (`id`),
@@ -26,8 +26,6 @@ CREATE TABLE `dm_characters`
     `name`         varchar(30) NOT NULL COMMENT '角色名字',
     `level`        int(3)  NOT NULL COMMENT '等级',
     `exp`          bigint(20)  NOT NULL COMMENT '经验',
-    `guild_id`     BIGINT(20) DEFAULT NULL COMMENT '公会ID',
-    `family_id`    BIGINT(20) DEFAULT NULL COMMENT '家族ID',
     `strength`     int(6)  NOT NULL COMMENT '力量',
     `dexterity`    int(6)  NOT NULL COMMENT '敏捷',
     `luck`         int(6)  NOT NULL COMMENT '运气',
@@ -42,12 +40,13 @@ CREATE TABLE `dm_characters`
     `ap` int(5) NOT NULL DEFAULT 0 COMMENT '能力点',
     `sp` VARCHAR(32) DEFAULT NULL COMMENT '技能点',
     `map_id` int(8) DEFAULT NULL COMMENT '地图IP',
+    `meso` bigint(12) DEFAULT NULL COMMENT '金币',
     `gm`           tinyint(1)  NOT NULL DEFAULT 0 COMMENT 'GM标志位',
     `hair` int(11) NOT NULL DEFAULT 0 COMMENT '发型',
     `face` int(11) NOT NULL DEFAULT 0 COMMENT '脸型',
     `skin_color` tinyint(1) NOT NULL DEFAULT 0 COMMENT '肤色',
     `spawn_point` int(3) DEFAULT NULL COMMENT '出生点',
-    `party_id` int(8) DEFAULT NULL COMMENT '组队ID',
+    `is_delete`    tinyint(1) NOT NULL DEFAULT '0' COMMENT '删除标志位 0未删除 1已删除',
     `create_time`  datetime DEFAULT NULL COMMENT '创建时间',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='账号角色表';
@@ -63,42 +62,82 @@ CREATE TABLE `dm_characters_slot`
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='账号角色槽数表';
 
-
-DROP TABLE IF EXISTS `dm_family`;
-CREATE TABLE `dm_family`
-(
-    `id`          bigint(20)       NOT NULL AUTO_INCREMENT COMMENT '主键',
-    `name`        varchar(30) NOT NULL COMMENT '家族名字',
-    `leader_id`   bigint(20)  NOT NULL COMMENT '族长ID',
-    `notice`      varchar(255) DEFAULT NULL COMMENT '通告',
-    `capacity`      int(6) DEFAULT NULL COMMENT '人数容量',
-    `create_time` datetime     DEFAULT NULL COMMENT '创建时间',
-    PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='家族表';
-
 DROP TABLE IF EXISTS `dm_guild`;
 CREATE TABLE `dm_guild`
 (
     `id`          bigint(20)       NOT NULL AUTO_INCREMENT COMMENT '主键',
-    `name`        varchar(30) NOT NULL COMMENT '公会名字',
-    `leader_id`   bigint(20)  NOT NULL COMMENT '公会长ID',
+    `name`        varchar(30) NOT NULL COMMENT '家族名字',
     `notice`      varchar(255) DEFAULT NULL COMMENT '通告',
     `alliance_id` bigint(20)  DEFAULT NULL COMMENT '联盟ID',
+    `capacity`      int(6) DEFAULT NULL COMMENT '人数容量',
     `create_time` datetime     DEFAULT NULL COMMENT '创建时间',
     PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='公会表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='家族信息表';
 
-DROP TABLE IF EXISTS `dm_alliances`;
-CREATE TABLE `dm_alliances`
+DROP TABLE IF EXISTS `dm_guild_rank`;
+CREATE TABLE `dm_guild_rank`
+(
+    `id`          bigint(20)       NOT NULL AUTO_INCREMENT COMMENT '主键',
+    `guild_id`   bigint(20)  NOT NULL COMMENT '家族ID',
+    `character_id` bigint(20)  DEFAULT NULL COMMENT '角色ID',
+    `rank` TINYINT(1)  DEFAULT NULL COMMENT '职级',
+    `join_time` datetime     DEFAULT NULL COMMENT '加入时间',
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='家族职级表';
+
+DROP TABLE IF EXISTS `dm_alliance`;
+CREATE TABLE `dm_alliance`
 (
     `id`          bigint(20)       NOT NULL AUTO_INCREMENT COMMENT '主键',
     `name`        varchar(30) NOT NULL COMMENT '联盟名字',
-    `leader_id`   bigint(20)  NOT NULL COMMENT '联盟长ID',
     `notice`      varchar(255) DEFAULT NULL COMMENT '通告',
+    `capacity`      INT(3) DEFAULT NULL COMMENT '公会容量',
     `create_time` datetime     DEFAULT NULL COMMENT '创建时间',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='联盟表';
 
+
+DROP TABLE IF EXISTS `dm_alliance_guild`;
+CREATE TABLE `dm_alliance_guild`
+(
+    `id`          bigint(20)       NOT NULL AUTO_INCREMENT COMMENT '主键',
+    `alliance_id`   bigint(20)  NOT NULL COMMENT '联盟ID',
+    `guild_id` bigint(20)  DEFAULT NULL COMMENT '公会ID',
+    `join_time` datetime     DEFAULT NULL COMMENT '加入时间',
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='联盟公会表';
+
+DROP TABLE IF EXISTS `dm_alliance_rank`;
+CREATE TABLE `dm_alliance_rank`
+(
+    `id`          bigint(20)       NOT NULL AUTO_INCREMENT COMMENT '主键',
+    `alliance_id`   bigint(20)  NOT NULL COMMENT '联盟ID',
+    `guild_id` bigint(20)  DEFAULT NULL COMMENT '公会ID',
+    `character_id` bigint(20)  DEFAULT NULL COMMENT '角色ID',
+    `rank` TINYINT(1)  DEFAULT NULL COMMENT '职级',
+    `create_time` datetime     DEFAULT NULL COMMENT '设置时间',
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='家族职级表';
+
+DROP TABLE IF EXISTS `dm_party`;
+CREATE TABLE `dm_party`
+(
+    `id`          bigint(20)       NOT NULL AUTO_INCREMENT COMMENT '主键',
+    `character_id` bigint(20)  DEFAULT NULL COMMENT '创建人',
+    `create_time` datetime     DEFAULT NULL COMMENT '创建时间',
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='组队表';
+
+DROP TABLE IF EXISTS `dm_party_rank`;
+CREATE TABLE `dm_party_rank`
+(
+    `id`          bigint(20)       NOT NULL AUTO_INCREMENT COMMENT '主键',
+    `party_id`   bigint(20)  NOT NULL COMMENT '组队ID',
+    `character_id` bigint(20)  DEFAULT NULL COMMENT '联盟ID',
+    `rank` TINYINT(1)  DEFAULT NULL COMMENT '职级',
+    `join_time` datetime     DEFAULT NULL COMMENT '加入时间',
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='组队职级表';
 
 DROP TABLE IF EXISTS `dm_buddy`;
 CREATE TABLE `dm_buddy`

@@ -19,8 +19,8 @@ mybatis-plus:
     # 关闭日志记录 (可单纯使用 p6spy 分析) org.apache.ibatis.logging.nologging.NoLoggingImpl
     # 默认日志输出 org.apache.ibatis.logging.slf4j.Slf4jImpl
     logImpl: org.apache.ibatis.logging.nologging.NoLoggingImpl
-    # 枚举处理类
-    default-enum-type-handler: cn.dm.ms.mybatis.handler.DMEnumCodeHandler
+    # 枚举处理类, 使用@EnumValue替换了
+    # default-enum-type-handler: cn.dm.ms.mybatis.handler.DMEnumCodeHandler
   global-config:
     # 是否打印 Logo banner
     banner: true

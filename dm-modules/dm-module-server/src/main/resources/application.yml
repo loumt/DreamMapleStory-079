@@ -89,6 +89,7 @@ maple:
   version: 79
   message: 欢迎来到最初的冒险岛 如果发现外挂请截图告知. 祝游戏愉快~
   admin: true
+  ip: 127.0.0.1
   # 登录服务器
   login:
     # 端口
@@ -105,3 +106,7 @@ maple:
     default-port: 17575
     # 频道数
     count: 2
+  # 家族
+  guild:
+    # 创建家族所需要的金币数
+    cost: 500000

@@ -1,11 +1,14 @@
 package cn.ms.dm.server.operation.packet.creator;
 
 import cn.ms.dm.maple.base.IMapleItem;
+import cn.ms.dm.maple.constant.packet.SendPacketOpcode;
 import cn.ms.dm.maple.constant.inventory.MapleInventoryType;
 import cn.ms.dm.maple.netty.MaplePacketLittleEndianWriter;
 import cn.ms.dm.server.client.MapleCharacter;
 import cn.ms.dm.server.client.MapleInventory;
+import lombok.SneakyThrows;
 
+import java.net.InetAddress;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -17,7 +20,7 @@ import java.util.Map;
  * @email lmtemail163@163.com
  * @description 共用数据包构建工具
  */
-public final class MaplePacketHelper {
+public final class MaplePacketCreator {
     private final static long FT_UT_OFFSET = 116444592000000000L; // EDT
     public final static long MAX_TIME = 150842304000000000L; //00 80 05 BB 46 E6 17 02
     public final static long ZERO_TIME = 94354848000000000L; //00 40 E0 FD 3B 37 4F 01
@@ -35,7 +38,7 @@ public final class MaplePacketHelper {
     }
 
     public static void addCharStats(final MaplePacketLittleEndianWriter mplew, final MapleCharacter chr) {
-        mplew.writeInt(chr.getCharacterId().intValue());
+        mplew.writeInt(chr.getPlayerId().intValue());
         mplew.writeAsciiString(chr.getName(), 13);
         // gender (0 = male, 1 = female)
         mplew.write(chr.getGender().getCode());
@@ -61,7 +64,7 @@ public final class MaplePacketHelper {
         mplew.writeShort(chr.getFame());
         // Gachapon exp
         mplew.writeInt(0);
-        mplew.writeLong(MaplePacketHelper.getTime(System.currentTimeMillis()));
+        mplew.writeLong(MaplePacketCreator.getTime(System.currentTimeMillis()));
         // current map id
         mplew.writeInt(chr.getMapId());
         // spawnpoint
@@ -121,5 +124,21 @@ public final class MaplePacketHelper {
         mplew.writeInt(cWeapon != null ? cWeapon.getItemId() : 0);
         mplew.writeInt(0);
         mplew.writeLong(0);
+    }
+
+
+
+    @SneakyThrows
+    public static byte[] getServerIP(final String ip, final int port, final int clientId) {
+        final MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
+        mplew.writeShort(SendPacketOpcode.SERVER_IP.getValue());
+        mplew.writeShort(0);
+
+        byte[] ipBytes = InetAddress.getByName(ip).getAddress();
+        mplew.write(ipBytes);
+        mplew.writeShort(port);
+        mplew.writeInt(clientId);
+        mplew.write(new byte[]{1, 0, 0, 0, 0});
+        return mplew.getPacket();
     }
 }

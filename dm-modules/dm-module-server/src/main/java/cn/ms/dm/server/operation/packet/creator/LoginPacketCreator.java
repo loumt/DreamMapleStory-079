@@ -24,7 +24,7 @@ import cn.ms.dm.core.enums.Gender;
 import cn.ms.dm.core.enums.ResultEnum;
 import cn.ms.dm.maple.constant.MapleConstant;
 import cn.ms.dm.maple.constant.MapleWorld;
-import cn.ms.dm.maple.constant.SendPacketOpcode;
+import cn.ms.dm.maple.constant.packet.SendPacketOpcode;
 import cn.ms.dm.maple.netty.MaplePacketLittleEndianWriter;
 import cn.ms.dm.maple.utils.HexUtil;
 import cn.ms.dm.server.client.MapleCharacter;
@@ -229,8 +229,8 @@ public final class LoginPacketCreator {
 
 
     private static void addCharEntry(final MaplePacketLittleEndianWriter mplew, final MapleCharacter chr) {
-        MaplePacketHelper.addCharStats(mplew, chr);
-        MaplePacketHelper.addCharLook(mplew, chr, true);
+        MaplePacketCreator.addCharStats(mplew, chr);
+        MaplePacketCreator.addCharLook(mplew, chr, true);
     }
 
 
@@ -258,6 +258,18 @@ public final class LoginPacketCreator {
         mplew.writeShort(SendPacketOpcode.DELETE_CHAR_RESPONSE.getValue());
         mplew.writeInt(cid);
         mplew.write(state);
+        return mplew.getPacket();
+    }
+
+
+    public static byte[] getServerStatus(final int status) {
+        final MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
+
+        /*	 * 0 - Normal
+         * 1 - Highly populated
+         * 2 - Full*/
+        mplew.writeShort(SendPacketOpcode.SERVERSTATUS.getValue());
+        mplew.writeShort(status);
         return mplew.getPacket();
     }
 }

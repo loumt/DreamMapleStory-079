@@ -20,7 +20,7 @@
  */
 package cn.ms.dm.server.handling;
 import cn.hutool.core.util.ObjectUtil;
-import cn.ms.dm.maple.constant.SendPacketOpcode;
+import cn.ms.dm.maple.constant.packet.SendPacketOpcode;
 import cn.ms.dm.maple.netty.PacketCrypto;
 import cn.ms.dm.maple.utils.MapleCustomEncryption;
 import cn.ms.dm.server.client.MapleClient;

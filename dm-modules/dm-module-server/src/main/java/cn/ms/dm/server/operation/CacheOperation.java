@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
  * @name CacheOperation
  * @date 2026-03-18 15:50
  * @email lmtemail163@163.com
- * @description
+ * @description WZ固定数据缓存
  */
 @Slf4j
 public class CacheOperation {

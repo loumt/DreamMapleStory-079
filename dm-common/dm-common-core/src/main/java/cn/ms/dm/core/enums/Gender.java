@@ -1,7 +1,9 @@
 package cn.ms.dm.core.enums;
 
 import cn.ms.dm.core.base.BaseEnum;
+import com.baomidou.mybatisplus.annotation.EnumValue;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 /**
  * @author LouMT
@@ -10,18 +12,15 @@ import lombok.AllArgsConstructor;
  * @email lmtemail163@163.com
  * @description 性别
  */
+@Getter
 @AllArgsConstructor
-public enum Gender implements BaseEnum {
+public enum Gender{
     UNKNOWN(-1),
     MALE(0),
     FEMALE(1);
 
+    @EnumValue
     private final int code;
-
-    @Override
-    public int getCode() {
-        return code;
-    }
 
     public static Gender codeOf(byte code){
         for (Gender value : Gender.values()) {

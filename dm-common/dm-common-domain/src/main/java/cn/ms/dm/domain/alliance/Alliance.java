@@ -19,9 +19,9 @@ import java.io.Serial;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@TableName("dm_alliances")
+@TableName("dm_alliance")
 @Schema(description = "联盟")
-public class Alliances extends BaseModel {
+public class Alliance extends BaseModel {
     @Serial
     private static final long serialVersionUID = 8045865424050583094L;
 
@@ -34,12 +34,12 @@ public class Alliances extends BaseModel {
     private String name;
 
     @TableField
-    @Schema(description = "联盟长角色ID")
-    private Long leaderId;
-
-    @TableField
     @Schema(description = "通告")
     private String notice;
+
+    @TableField
+    @Schema(description = "容量")
+    private Integer capacity;
 
 
 }

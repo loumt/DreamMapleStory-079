@@ -4,14 +4,17 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.ms.dm.core.domain.Result;
 import cn.ms.dm.core.enums.Gender;
 import cn.ms.dm.core.enums.ResultEnum;
+import cn.ms.dm.core.enums.YesOrNo;
 import cn.ms.dm.core.utils.StringUtil;
+import cn.ms.dm.domain.account.Account;
 import cn.ms.dm.domain.account.Characters;
 import cn.ms.dm.domain.account.vo.AccountVO;
 import cn.ms.dm.maple.annotation.PacketHandler;
 import cn.ms.dm.maple.base.IMapleItem;
 import cn.ms.dm.maple.constant.MapleWorld;
-import cn.ms.dm.maple.constant.ReceivePacketOpcode;
+import cn.ms.dm.maple.constant.packet.ReceivePacketOpcode;
 import cn.ms.dm.maple.constant.inventory.MapleInventoryType;
+import cn.ms.dm.maple.constant.netty.NettyConstant;
 import cn.ms.dm.maple.netty.LittleEndianAccessor;
 import cn.ms.dm.server.client.MapleCharacter;
 import cn.ms.dm.server.client.MapleClient;
@@ -19,13 +22,15 @@ import cn.ms.dm.server.client.MapleInventory;
 import cn.ms.dm.server.config.AppConfigProperties;
 import cn.ms.dm.server.database.service.AccountService;
 import cn.ms.dm.server.database.service.CharacterService;
+import cn.ms.dm.server.handling.channel.ChannelServer;
 import cn.ms.dm.server.handling.channel.ChannelServerGroup;
 import cn.ms.dm.server.handling.login.LoginServer;
 import cn.ms.dm.server.operation.CacheOperation;
 import cn.ms.dm.server.operation.WzOperation;
 import cn.ms.dm.server.operation.packet.creator.LoginPacketCreator;
+import cn.ms.dm.server.operation.packet.creator.MaplePacketCreator;
 import cn.ms.dm.server.operation.packet.creator.MessagePacketCreator;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -161,7 +166,6 @@ public class LoginOpExecutor {
             client.getSession().close();
             return;
         }
-
         //业务处理
         characterService.deleteCharacters((long) characterId);
         //返回封包
@@ -217,7 +221,15 @@ public class LoginOpExecutor {
      */
     @PacketHandler(ReceivePacketOpcode.SERVER_STATUS_REQUEST)
     public void handleServerStatus(LittleEndianAccessor slea, MapleClient client) {
-
+        final int onlineClient = ChannelServerGroup.getOnlineClient();
+        final int serverLimit = NettyConstant.USER_LIMIT;
+        if (onlineClient >= serverLimit) {
+            client.sendPacket(LoginPacketCreator.getServerStatus(2));
+        } else if (onlineClient * 2 >= serverLimit) {
+            client.sendPacket(LoginPacketCreator.getServerStatus(1));
+        } else {
+            client.sendPacket(LoginPacketCreator.getServerStatus(0));
+        }
     }
 
     /**
@@ -239,6 +251,23 @@ public class LoginOpExecutor {
      */
     @PacketHandler(ReceivePacketOpcode.CHAR_SELECT)
     public void handleCharacterSelect(LittleEndianAccessor slea, MapleClient client) {
+        final int characterId = slea.readInt();
 
+        Characters characters = characterService.getById(characterId);
+        if(ObjectUtil.isNull(characters) || !ObjectUtil.equal(characters.getAccountId(), client.getAccountId())){
+            log.error("错误角色选择");
+            client.getSession().close();
+            return;
+        }
+
+        String sessionIp = client.getSession().remoteAddress().toString().split(":")[0];
+        LambdaUpdateWrapper<Account> uq = Wrappers.lambdaUpdate(Account.class)
+                .eq(Account::getId, client.getAccountId())
+                .set(Account::getSessionIp, sessionIp)
+                .set(Account::getLoginStatus, YesOrNo.YES);
+        accountService.update(uq);
+
+        ChannelServer server = ChannelServerGroup.getChannelServer(client.getChannelNo());
+        client.sendPacket(MaplePacketCreator.getServerIP(server.getHost(), server.getPort(), characterId));
     }
 }

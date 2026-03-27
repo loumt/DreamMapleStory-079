@@ -1,7 +1,7 @@
 package cn.ms.dm.server.operation.packet;
 
 import cn.ms.dm.maple.annotation.PacketHandler;
-import cn.ms.dm.maple.constant.ReceivePacketOpcode;
+import cn.ms.dm.maple.constant.packet.ReceivePacketOpcode;
 import cn.ms.dm.maple.constant.packet.ChatType;
 import cn.ms.dm.maple.netty.LittleEndianAccessor;
 import cn.ms.dm.server.client.MapleCharacter;
@@ -27,7 +27,7 @@ public class ChatOpExecutor {
      */
     @PacketHandler(ReceivePacketOpcode.GENERAL_CHAT)
     public void handleGeneralChat(final LittleEndianAccessor slea, final MapleClient client) {
-        MapleCharacter character = client.getCharacter();
+        MapleCharacter character = client.getPlayer();
         if (!character.isCanTalk()) {
             client.sendPacket(MessagePacketCreator.serverNotice(6, "在这个地方不能说话。"));
         } else {
@@ -52,7 +52,7 @@ public class ChatOpExecutor {
             recipients[i] = slea.readInt();
         }
         final String content = slea.readMapleAsciiString();
-        MapleCharacter character = client.getCharacter();
+        MapleCharacter character = client.getPlayer();
         if (!character.isCanTalk()) {
             client.sendPacket(MessagePacketCreator.serverNotice(6, "在这个地方不能说话。"));
             return;

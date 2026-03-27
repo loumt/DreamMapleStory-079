@@ -1,4 +1,4 @@
-package cn.ms.dm.maple.constant;
+package cn.ms.dm.maple.constant.packet;
 
 
 import cn.ms.dm.maple.base.WritableIntValueHolder;

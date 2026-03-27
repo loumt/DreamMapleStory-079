@@ -4,6 +4,7 @@ import cn.ms.dm.core.enums.Gender;
 import cn.ms.dm.maple.constant.account.VipLevel;
 import cn.ms.dm.maple.netty.PacketCrypto;
 import cn.ms.dm.server.config.AppConfigProperties;
+import cn.ms.dm.server.operation.packet.creator.MessagePacketCreator;
 import com.google.common.collect.Lists;
 import io.netty.channel.Channel;
 import io.netty.util.AttributeKey;
@@ -44,11 +45,9 @@ public class MapleClient {
     private VipLevel accountVip;
     private String accountName;
     private Gender gender;
-    private MapleCharacter character;
-
+    private MapleCharacter player;
     //心跳时间戳
     private transient long lastPong = 0, lastPing = 0;
-
 
     private final transient Lock mutex = new ReentrantLock(true);
 
@@ -80,4 +79,10 @@ public class MapleClient {
     }
 
 
+    /**
+     * 发送系统消息
+     */
+    public void sendMessage(String content){
+        sendPacket(MessagePacketCreator.serverNotice(1, content));
+    }
 }

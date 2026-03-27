@@ -32,12 +32,12 @@ public class CharacterStorage {
     public final void register(final MapleCharacter character){
         if(ObjectUtil.isNull(character)) return;
         //缓存
-        CHARACTER_CACHE.put(character.getCharacterId(), character);
+        CHARACTER_CACHE.put(character.getPlayerId(), character);
     }
 
     public final void deregister(final MapleCharacter character) {
         //删除缓存
-        CHARACTER_CACHE.remove(character.getCharacterId());
+        CHARACTER_CACHE.remove(character.getPlayerId());
     }
 
     public final Integer getCharacterSize(){
@@ -46,5 +46,12 @@ public class CharacterStorage {
 
     public MapleCharacter getCharacterById(int characterId) {
         return CHARACTER_CACHE.get(characterId);
+    }
+
+    public MapleCharacter getCharacterByName(String name){
+        for (MapleCharacter ch : CHARACTER_CACHE.values()) {
+            if(ch.getName().equals(name)) return ch;
+        }
+        return null;
     }
 }

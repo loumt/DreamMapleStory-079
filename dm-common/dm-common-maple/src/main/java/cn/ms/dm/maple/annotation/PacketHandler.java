@@ -1,7 +1,7 @@
 package cn.ms.dm.maple.annotation;
 
 import cn.ms.dm.core.utils.StringUtil;
-import cn.ms.dm.maple.constant.ReceivePacketOpcode;
+import cn.ms.dm.maple.constant.packet.ReceivePacketOpcode;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -27,4 +27,5 @@ public @interface PacketHandler {
      * 备注
      */
     String remark() default StringUtil.EMPTY;
+
 }

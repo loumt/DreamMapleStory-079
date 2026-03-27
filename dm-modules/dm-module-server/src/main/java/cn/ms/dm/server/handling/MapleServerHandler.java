@@ -2,7 +2,7 @@ package cn.ms.dm.server.handling;
 
 import cn.hutool.core.util.ObjectUtil;
 import cn.ms.dm.maple.constant.netty.ChannelTypeEnum;
-import cn.ms.dm.maple.constant.ReceivePacketOpcode;
+import cn.ms.dm.maple.constant.packet.ReceivePacketOpcode;
 import cn.ms.dm.maple.netty.PacketCrypto;
 import cn.ms.dm.maple.netty.ByteArrayByteStream;
 import cn.ms.dm.maple.netty.LittleEndianAccessor;

@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
  * @name WorldOperation
  * @date 2026-03-03 15:30
  * @email lmtemail163@163.com
- * @description
+ * @description 数据库缓存数据
  */
 @Slf4j
 public final class WorldOperation {
@@ -18,8 +18,6 @@ public final class WorldOperation {
     //组队
     public static PartyExecutor Party;
     //家族
-    public static FamilyExecutor Family;
-    //公会
     public static GuildExecutor Guild;
     //联盟
     public static AllianceExecutor Alliance;
@@ -35,7 +33,6 @@ public final class WorldOperation {
     public static void init() {
         Buddy = SpringUtils.getBean(BuddyExecutor.class);
         Party = SpringUtils.getBean(PartyExecutor.class);
-        Family = SpringUtils.getBean(FamilyExecutor.class);
         Guild = SpringUtils.getBean(GuildExecutor.class);
         Alliance = SpringUtils.getBean(AllianceExecutor.class);
         Messenger = SpringUtils.getBean(MessengerExecutor.class);

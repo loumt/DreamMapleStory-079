@@ -1,5 +1,6 @@
 package cn.ms.dm.server.client;
 
+import cn.ms.dm.maple.constant.guild.GuildRankType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,6 +22,9 @@ public class MapleGuildCharacter implements Serializable {
 
     //角色信息
     private String name;
-    private Integer id,level;
+    private Integer id,level,job;
+    private GuildRankType rank;
+    private boolean online = false;
+
 
 }

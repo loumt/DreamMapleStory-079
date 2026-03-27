@@ -6,8 +6,10 @@ import cn.ms.dm.core.enums.Gender;
 import cn.ms.dm.core.utils.StringUtil;
 import cn.ms.dm.domain.account.Characters;
 import cn.ms.dm.domain.account.CharactersSlot;
+import cn.ms.dm.domain.guild.Guild;
 import cn.ms.dm.domain.inventory.ItemInventory;
 import cn.ms.dm.domain.inventory.ItemInventorySlot;
+import cn.ms.dm.domain.party.Party;
 import cn.ms.dm.maple.base.IMapleItem;
 import cn.ms.dm.maple.constant.inventory.MapleInventoryType;
 import cn.ms.dm.server.client.MapleCharacter;
@@ -25,6 +27,7 @@ import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.awt.*;
 import java.util.List;
@@ -46,6 +49,12 @@ public class CharacterService extends ServiceImpl<CharactersMapper, Characters> 
     private CharactersSlotService charactersSlotService;
     @Resource
     private ItemInventoryService itemInventoryService;
+    @Resource
+    private BuddyService buddyService;
+    @Resource
+    private GuildService guildService;
+    @Resource
+    private PartyService partyService;
 
     public boolean isFullCharactersSlot(Long accountId, Integer world){
         LambdaQueryWrapper<CharactersSlot> wq = Wrappers.lambdaQuery(CharactersSlot.class)
@@ -89,7 +98,7 @@ public class CharacterService extends ServiceImpl<CharactersMapper, Characters> 
         rs.initInventory();
 
         //基础数据
-        rs.setCharacterId(characterId.intValue());
+        rs.setPlayerId(characterId.intValue());
         rs.setName(character.getName());
         rs.setLevel(character.getLevel());
         rs.setFame(character.getFame());
@@ -124,8 +133,8 @@ public class CharacterService extends ServiceImpl<CharactersMapper, Characters> 
         rs.setStatus(status);
 
         //家族
-        Long guildId = character.getGuildId();
-        if (ObjectUtil.isNotNull(guildId)) {
+        Guild guild = guildService.findCharacterGuild(characterId);
+        if (ObjectUtil.isNotNull(guild)) {
             MapleGuildCharacter mapleGuildCharacter = new MapleGuildCharacter();
             mapleGuildCharacter.setId(character.getId().intValue());
             mapleGuildCharacter.setName(character.getName());
@@ -134,7 +143,8 @@ public class CharacterService extends ServiceImpl<CharactersMapper, Characters> 
         }
 
         //组队
-        rs.setParty(WorldOperation.Party.getParty(character.getPartyId()));
+        Party party = partyService.findCharacterParty(characterId);
+        rs.setParty(WorldOperation.Party.getParty(party.getId().intValue()));
 
         //物品
         ItemInventorySlot itemInventorySlot = itemInventorySlotService.getOne(Wrappers.lambdaQuery(ItemInventorySlot.class).eq(ItemInventorySlot::getCharacterId, characterId));
@@ -193,14 +203,24 @@ public class CharacterService extends ServiceImpl<CharactersMapper, Characters> 
     /**
      * 删除角色
      */
+    @Transactional(rollbackFor = Exception.class)
     public void deleteCharacters(Long characterId) {
         log.info("删除角色: {}", characterId);
+        Characters characters = getById(characterId);
+        if(ObjectUtil.isNull(characters)) return;
+
         //删除角色
         removeById(characterId);
         //删除装备数据
         itemInventoryService.deleteCharacters(characterId);
         itemInventorySlotService.deleteCharacters(characterId);
         //删除公会数据
-        WorldOperation.Guild.leave(characterId.intValue());
+        Guild guild = guildService.findCharacterGuild(characterId);
+        if(ObjectUtil.isNotNull(guild)){
+            guildService.deleteCharacters(characterId);
+            WorldOperation.Guild.leave(guild.getId().intValue(), characterId.intValue());
+        }
+        //删除好友数据
+        buddyService.deleteCharacters(characterId);
     }
 }

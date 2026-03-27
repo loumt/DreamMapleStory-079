@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ms.dm.server.database.mapper.AllianceMapper">
+    <resultMap type="cn.ms.dm.domain.alliance.vo.AllianceDetailVO" id="detailVO">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="notice" column="notice"/>
+        <result property="capacity" column="capacity"/>
+
+        <collection property="ranks" ofType="cn.ms.dm.domain.alliance.vo.AllianceRankVO">
+            <result property="characterId" column="rank_character_id" />
+            <result property="name" column="rank_name" />
+            <result property="rank" column="rank_rank" />
+            <result property="createTime" column="rank_create_time" />
+        </collection>
+
+        <collection property="guilds" ofType="cn.ms.dm.domain.alliance.vo.AllianceGuildVO">
+            <result property="guildId" column="guild_id"/>
+            <result property="name" column="guild_name"/>
+            <result property="joinTime" column="guild_join_time"/>
+        </collection>
+    </resultMap>
+
+    <select id="detail" resultMap="detailVO">
+        SELECT
+            a.id,
+            a.name,
+            a.capacity,
+            a.create_time,
+            ag.guild_id,
+            g.name as guild_name,
+            ag.join_time AS guild_join_time,
+            ar.character_id AS rank_character_id,
+            ar.rank AS rank_rank,
+            c.name as rank_name,
+            ar.create_time AS rank_create_time
+        FROM
+            dm_alliance a
+                LEFT JOIN dm_alliance_guild ag ON a.id = ag.alliance_id
+                LEFT JOIN dm_guild g ON g.id = ag.guild_id
+                LEFT JOIN dm_alliance_rank ar ON a.id = ar.alliance_id
+                LEFT JOIN dm_characters c ON c.id = ar.character_id AND c.is_delete = 0
+        WHERE a.id = #{id}
+    </select>
+</mapper>

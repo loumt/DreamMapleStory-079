@@ -73,7 +73,11 @@ public class Account extends BaseModel {
 
     @TableField
     @Schema(description = "点券数")
-    private Integer meso;
+    private Integer cash;
+
+    @TableField("session_ip")
+    @Schema(description = "SESSION IP")
+    private String sessionIp;
 
     @TableLogic
     @TableField("is_delete")

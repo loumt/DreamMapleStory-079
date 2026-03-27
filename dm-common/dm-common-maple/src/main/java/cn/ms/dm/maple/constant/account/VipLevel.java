@@ -1,6 +1,7 @@
 package cn.ms.dm.maple.constant.account;
 
 import cn.ms.dm.core.base.BaseEnum;
+import com.baomidou.mybatisplus.annotation.EnumValue;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -13,11 +14,12 @@ import lombok.Getter;
  */
 @AllArgsConstructor
 @Getter
-public enum VipLevel implements BaseEnum {
+public enum VipLevel {
     NORMAL(0, "普通用户"),
     VIP(1, "VIP用户")
     ;
 
+    @EnumValue
     private final int code;
     private final String type;
 }

@@ -1,8 +1,5 @@
 package cn.ms.dm.maple.annotation;
 
-import cn.ms.dm.core.utils.StringUtil;
-import cn.ms.dm.maple.constant.ReceivePacketOpcode;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

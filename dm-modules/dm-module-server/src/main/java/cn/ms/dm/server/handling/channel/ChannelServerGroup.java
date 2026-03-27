@@ -77,11 +77,26 @@ public class ChannelServerGroup {
         return sum;
     }
 
-    public static MapleCharacter getCharacter(final int characterId) {
+    public static MapleCharacter getCharacter(final Integer characterId) {
         for (ChannelServer cs : instances.values()) {
             MapleCharacter c = cs.getStorage().getCharacterById(characterId);
             if(c!= null) return c;
         }
         return null;
+    }
+    public static MapleCharacter getCharacter(final String characterName) {
+        for (ChannelServer cs : instances.values()) {
+            MapleCharacter c = cs.getStorage().getCharacterByName(characterName);
+            if(c!= null) return c;
+        }
+        return null;
+    }
+
+    /**
+     * 发送数据包
+     */
+    public static void sendPacket(final Integer characterId, final byte[] packet){
+        MapleCharacter character = getCharacter(characterId);
+        if(character!=null) character.getClient().sendPacket(packet);
     }
 }

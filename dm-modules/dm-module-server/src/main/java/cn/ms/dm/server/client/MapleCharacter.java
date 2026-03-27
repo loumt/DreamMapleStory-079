@@ -4,8 +4,13 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.ms.dm.core.enums.Gender;
 import cn.ms.dm.maple.base.AbstractAnimatedMapleMapObject;
 import cn.ms.dm.maple.base.IMapleItem;
+import cn.ms.dm.maple.constant.account.CharacterStat;
+import cn.ms.dm.maple.constant.guild.GuildRankType;
 import cn.ms.dm.maple.constant.inventory.MapleInventoryType;
 import cn.ms.dm.maple.constant.map.MapleMapObjectType;
+import cn.ms.dm.server.operation.packet.creator.CharacterPacketCreator;
+import cn.ms.dm.server.operation.packet.creator.MaplePacketCreator;
+import cn.ms.dm.server.operation.packet.creator.MessagePacketCreator;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,6 +18,8 @@ import lombok.Setter;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.EnumMap;
+import java.util.Map;
 
 /**
  * @author LouMT
@@ -34,8 +41,8 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
     //是否可以聊天
     private boolean canTalk = true;
     //角色信息
-    private Long exp;
-    private Integer characterId, world, level, job, hair, face, skinColor, mapId;
+    private Long exp, meso;
+    private Integer playerId, world, level, job, hair, face, skinColor, mapId;
     private String name;
     private Short fame, remainingAp;
     private Integer[] remainingSp;
@@ -47,7 +54,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
     //队伍
     private MapleParty party;
     //公会信息
-    private Long guildId;
+    private Integer guildId;
     private String guildName;
     //物品清单
     private MapleInventory[] inventory;
@@ -97,5 +104,31 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
             inventories[value.ordinal()] = new MapleInventory(value);
         }
         inventory = inventories;
+    }
+
+    /**
+     * 发送数据包
+     */
+    public void sendPacket(final byte[] packet){
+        if(client != null) client.sendPacket(packet);
+    }
+
+    /**
+     * 金币变动
+     */
+    public void gainMeso(Integer cost) {
+        if (meso + cost < 0){
+            sendPacket(CharacterPacketCreator.enableActions());
+            return;
+        }
+        setMeso(meso + cost);
+        sendPacket(CharacterPacketCreator.updateStats(CharacterStat.MESO, meso.intValue(), false));
+    }
+
+    /**
+     * 发送系统消息
+     */
+    public void sendMessage(String content){
+        sendPacket(MessagePacketCreator.serverNotice(1, content));
     }
 }

@@ -1,6 +1,6 @@
 package cn.ms.dm.server.operation.packet.creator;
 
-import cn.ms.dm.maple.constant.SendPacketOpcode;
+import cn.ms.dm.maple.constant.packet.SendPacketOpcode;
 import cn.ms.dm.maple.netty.MaplePacketLittleEndianWriter;
 
 /**

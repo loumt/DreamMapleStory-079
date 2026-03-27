@@ -36,8 +36,9 @@ public class ChannelServer extends BaseMapleServer {
     private static final long serialVersionUID = -8658887773883501256L;
     @Resource
     private ServerConnection acceptor;
-    //频道号
-    private int channelNo;
+    //频道号, 端口号
+    private String host;
+    private int channelNo, port;
     //玩家缓存
     private CharacterStorage storage;
     @Resource
@@ -47,7 +48,8 @@ public class ChannelServer extends BaseMapleServer {
      * 频道初始化
      */
     public void init(){
-        int port = AppConfigProperties.CHANNEL_DEFAULT_PORT + channelNo;
+        host = AppConfigProperties.MAPLE_IP;
+        port = AppConfigProperties.CHANNEL_DEFAULT_PORT + channelNo;
         acceptor.init(port,  ChannelTypeEnum.CHANNEL_SERVER, channelNo);
         log.info("【频道服务】 频道:【{}】 - 监听端口: {}", channelNo, port);
         //初始化角色缓存容器
@@ -87,7 +89,7 @@ public class ChannelServer extends BaseMapleServer {
         log.info("频道号:{}  【玩家: {}】加入", channelNo, character.getName());
         storage.register(character);
         //注册到查询器
-        WorldOperation.Find.register(character.getCharacterId(), channelNo);
+        WorldOperation.Find.register(character.getPlayerId(), channelNo);
         //消息发送? 需要看一下这个消息是什么消息
         character.getClient().sendPacket(MessagePacketCreator.serverMessage("这是一条测试消息"));
     }
@@ -99,7 +101,7 @@ public class ChannelServer extends BaseMapleServer {
         log.info("频道号:{}  【玩家: {}】离开", channelNo, character.getName());
         storage.deregister(character);
         //注销对应数据
-        WorldOperation.Find.deregister(character.getCharacterId());
+        WorldOperation.Find.deregister(character.getPlayerId());
     }
 
     /**

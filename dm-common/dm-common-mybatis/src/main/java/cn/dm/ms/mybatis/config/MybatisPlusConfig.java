@@ -33,7 +33,7 @@ public class MybatisPlusConfig {
         MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
         interceptor.addInnerInterceptor(paginationInnerInterceptor());
         interceptor.addInnerInterceptor(optimisticLockerInnerInterceptor());
-        interceptor.addInnerInterceptor(blockAttackInnerInterceptor());
+//        interceptor.addInnerInterceptor(blockAttackInnerInterceptor());
         return interceptor;
     }
 
