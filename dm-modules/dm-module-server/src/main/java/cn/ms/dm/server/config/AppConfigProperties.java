@@ -78,6 +78,12 @@ public class AppConfigProperties {
     @Value("${maple.guild.cost:500000}")
     private Integer guildCost;
 
+    /**
+     * 好友上限
+     */
+    @Value("${maple.buddy.slot: 50}")
+    private Integer buddySlot;
+
     public static Integer LOGIN_SERVER_PORT;
     public static Integer LOGIN_ATTEMPT_COUNT;
     public static Short MAPLE_VERSION;
@@ -86,6 +92,7 @@ public class AppConfigProperties {
     public static Integer CHANNEL_DEFAULT_PORT;
     public static Integer CHANNEL_COUNT;
     public static Integer GUILD_CREATE_COST;
+    public static Integer BUDDY_SLOT;
 
     @PostConstruct
     public void init(){
@@ -97,5 +104,6 @@ public class AppConfigProperties {
         MAPLE_IP = ip;
         LOGIN_ATTEMPT_COUNT = loginAttemptCount;
         GUILD_CREATE_COST = guildCost;
+        BUDDY_SLOT = buddySlot;
     }
 }

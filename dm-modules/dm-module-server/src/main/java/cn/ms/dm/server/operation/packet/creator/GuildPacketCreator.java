@@ -61,11 +61,10 @@ public final class GuildPacketCreator {
         mplew.writeMapleAsciiString(guild.getName() /*+ Prefix*/);
 
         //rank title
-        mplew.writeMapleAsciiString(GuildRankType.LEADER.getType());
-        mplew.writeMapleAsciiString(GuildRankType.VICE_LEADER.getType());
-        mplew.writeMapleAsciiString(GuildRankType.ELDER.getType());
-        mplew.writeMapleAsciiString(GuildRankType.ELITE.getType());
-        mplew.writeMapleAsciiString(GuildRankType.MEMBER.getType());
+        for (int i = 1; i <= 5; i++) {
+            mplew.writeMapleAsciiString(guild.getRanks(i));
+        }
+
         //添加成员信息
         addMembers(guild.getId(), mplew);
 

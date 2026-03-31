@@ -23,15 +23,12 @@ public class AllianceRankVO implements Serializable {
     @Serial
     private static final long serialVersionUID = 6816323433302228701L;
 
-    @Schema(description = "角色Id")
-    private Long characterId;
-
-    @Schema(description = "角色名字")
-    private String name;
-
+    @TableField
     @Schema(description = "职级")
     private AllianceRankType rank;
 
-    @Schema(description = "设置时间")
-    private LocalDateTime createTime;
+    @TableField
+    @Schema(description = "职级名称")
+    private String title;
+
 }

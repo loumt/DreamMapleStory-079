@@ -8,10 +8,8 @@
         <result property="capacity" column="capacity"/>
 
         <collection property="ranks" ofType="cn.ms.dm.domain.alliance.vo.AllianceRankVO">
-            <result property="characterId" column="rank_character_id" />
-            <result property="name" column="rank_name" />
             <result property="rank" column="rank_rank" />
-            <result property="createTime" column="rank_create_time" />
+            <result property="title" column="rank_title" />
         </collection>
 
         <collection property="guilds" ofType="cn.ms.dm.domain.alliance.vo.AllianceGuildVO">
@@ -30,10 +28,8 @@
             ag.guild_id,
             g.name as guild_name,
             ag.join_time AS guild_join_time,
-            ar.character_id AS rank_character_id,
             ar.rank AS rank_rank,
-            c.name as rank_name,
-            ar.create_time AS rank_create_time
+            ar.title AS rank_title
         FROM
             dm_alliance a
                 LEFT JOIN dm_alliance_guild ag ON a.id = ag.alliance_id

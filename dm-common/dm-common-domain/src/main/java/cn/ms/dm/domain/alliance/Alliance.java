@@ -25,10 +25,6 @@ public class Alliance extends BaseModel {
     @Serial
     private static final long serialVersionUID = 8045865424050583094L;
 
-    @TableId
-    @Schema(description = "联盟ID")
-    private Long id;
-
     @TableField
     @Schema(description = "联盟名")
     private String name;
@@ -38,7 +34,7 @@ public class Alliance extends BaseModel {
     private String notice;
 
     @TableField
-    @Schema(description = "容量")
+    @Schema(description = "家族容量")
     private Integer capacity;
 
 

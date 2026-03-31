@@ -14,15 +14,16 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum AllianceRankType {
-    LEADER(1, "联盟长"),
-    VICE_LEADER(2, "副联盟长"),
-    ELDER(3, "联盟长老"),
-    MEMBER(5, "成员")
+    LEADER(0, "联盟长"),
+    VICE_LEADER(1, "副联盟长"),
+    ELDER(2, "联盟长老"),
+    ELITE(3, "成员"),
+    MEMBER(4, "成员"),
     ;
 
     @EnumValue
     private final int code;
-    private final String type;
+    private final String title;
 
     public static AllianceRankType codeOf(int code){
         for (AllianceRankType value : AllianceRankType.values()) {

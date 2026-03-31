@@ -15,15 +15,15 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum GuildRankType {
-    LEADER(1, "族长"),
-    VICE_LEADER(2, "副族长"),
-    ELDER(3, "长老"),
-    ELITE(4, "精英"),
-    MEMBER(5, "成员")
+    LEADER(0, "族长"),
+    VICE_LEADER(1, "副族长"),
+    ELDER(2, "长老"),
+    ELITE(3, "精英"),
+    MEMBER(4, "成员")
     ;
 
     @EnumValue
     private final int code;
-    private final String type;
+    private final String title;
 
 }

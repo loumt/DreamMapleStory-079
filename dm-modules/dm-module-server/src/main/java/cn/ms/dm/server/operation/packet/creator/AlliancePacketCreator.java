@@ -1,10 +1,10 @@
 package cn.ms.dm.server.operation.packet.creator;
 
+import cn.ms.dm.maple.constant.alliance.AllianceRankType;
 import cn.ms.dm.maple.constant.packet.SendPacketOpcode;
 import cn.ms.dm.maple.netty.MaplePacketLittleEndianWriter;
 import cn.ms.dm.server.client.MapleAlliance;
 import cn.ms.dm.server.client.MapleAllianceGuild;
-import cn.ms.dm.server.client.MapleAllianceRank;
 import cn.ms.dm.server.client.MapleCharacter;
 
 /**
@@ -29,21 +29,10 @@ public final class AlliancePacketCreator {
         mplew.writeInt(alliance.getId());
         mplew.writeMapleAsciiString(alliance.getName());
 
-        //TODO 这里一定要是5个吗,还不一定有联盟业务
-//        for (int i = 1; i <= 5; i++) {
-//            mplew.writeMapleAsciiString(alliance.getRank(i));
-//        }
-        for (MapleAllianceRank rank : alliance.getRanks().values()) {
-            mplew.writeMapleAsciiString(rank.getName());
+        for (AllianceRankType rank : AllianceRankType.values()) {
+            mplew.writeMapleAsciiString(alliance.getRank(rank));
         }
-
-//        mplew.write(alliance.getNoGuilds());
         mplew.write(alliance.getGuilds().size());
-
-//        for (int i = 0; i < alliance.getNoGuilds(); i++) {
-//            mplew.writeInt(alliance.getGuildId(i));
-//        }
-
         for (MapleAllianceGuild guild : alliance.getGuilds().values()) {
             mplew.writeInt(guild.getId());
         }

@@ -84,12 +84,23 @@ public class ChannelServerGroup {
         }
         return null;
     }
+
+    public static MapleCharacter getCharacter(final Integer channelNo, final Integer characterId) {
+        if(!instances.containsKey(channelNo)) return null;
+        return instances.get(channelNo).getCharacter(characterId);
+    }
+
     public static MapleCharacter getCharacter(final String characterName) {
         for (ChannelServer cs : instances.values()) {
             MapleCharacter c = cs.getStorage().getCharacterByName(characterName);
             if(c!= null) return c;
         }
         return null;
+    }
+
+    public static MapleCharacter getCharacter(final Integer channelNo, final String characterName) {
+        if(!instances.containsKey(channelNo)) return null;
+        return instances.get(channelNo).getCharacter(characterName);
     }
 
     /**

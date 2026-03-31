@@ -2,6 +2,7 @@ package cn.ms.dm.domain.guild;
 
 import cn.ms.dm.core.enums.YesOrNo;
 import cn.ms.dm.domain.base.BaseModel;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -27,27 +28,27 @@ public class GuildInvite extends BaseModel {
     @Serial
     private static final long serialVersionUID = -6908614709481480325L;
 
-    @TableId
+    @TableField
     @Schema(description = "邀请人ID")
     private Long invitorId;
 
-    @TableId
+    @TableField
     @Schema(description = "家族ID")
     private Long guildId;
 
-    @TableId
+    @TableField
     @Schema(description = "被邀请玩家ID")
     private Long acceptorId;
 
-    @TableId
+    @TableField
     @Schema(description = "接收")
     private YesOrNo accept;
 
-    @TableId
+    @TableField
     @Schema(description = "接收时间")
     private LocalDateTime acceptTime;
 
-    @TableId
+    @TableField
     @Schema(description = "过期时间")
     private LocalDateTime expireTime;
 }

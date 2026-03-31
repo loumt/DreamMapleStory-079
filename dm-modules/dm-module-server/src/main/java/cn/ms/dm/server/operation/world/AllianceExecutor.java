@@ -1,16 +1,23 @@
 package cn.ms.dm.server.operation.world;
 
 import cn.hutool.core.util.ObjectUtil;
+import cn.ms.dm.core.utils.StreamUtils;
 import cn.ms.dm.domain.alliance.Alliance;
+import cn.ms.dm.domain.alliance.AllianceGuildCharacter;
 import cn.ms.dm.domain.alliance.vo.AllianceDetailVO;
+import cn.ms.dm.domain.alliance.vo.AllianceGuildCharacterVO;
 import cn.ms.dm.domain.alliance.vo.AllianceGuildVO;
 import cn.ms.dm.domain.alliance.vo.AllianceRankVO;
 import cn.ms.dm.maple.constant.alliance.AllianceRankType;
+import cn.ms.dm.maple.constant.packet.ChatType;
 import cn.ms.dm.server.client.MapleAlliance;
+import cn.ms.dm.server.client.MapleAllianceCharacter;
 import cn.ms.dm.server.client.MapleAllianceGuild;
-import cn.ms.dm.server.client.MapleAllianceRank;
 import cn.ms.dm.server.client.MapleGuild;
+import cn.ms.dm.server.database.service.AllianceGuildCharacterService;
 import cn.ms.dm.server.database.service.AllianceService;
+import cn.ms.dm.server.operation.packet.creator.MessagePacketCreator;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +26,7 @@ import org.springframework.stereotype.Component;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
@@ -57,23 +65,27 @@ public class AllianceExecutor {
         ga.setNotice(a.getNotice());
         ga.setCapacity(a.getCapacity());
         AllianceDetailVO detail = allianceService.detail(a.getId());
-
+        //职级集合
+        for (AllianceRankType value : AllianceRankType.values()) {
+            Optional<AllianceRankVO> first = StreamUtils.findFirst(detail.getRanks(), vo -> vo.getRank() == value);
+            ga.setRank(value, first.isEmpty()? value.getTitle(): first.get().getTitle());
+        }
         //公会集合
         for (AllianceGuildVO guild : detail.getGuilds()) {
             MapleAllianceGuild mag = new MapleAllianceGuild();
-            mag.setName(guild.getName());
             mag.setId(guild.getGuildId().intValue());
+            mag.setName(guild.getName());
             ga.add(mag);
         }
-
-        //职级集合
-        for (AllianceRankVO rank : detail.getRanks()) {
-            MapleAllianceRank mar = new MapleAllianceRank();
-            mar.setCharacterId(rank.getCharacterId().intValue());
-            mar.setName(rank.getName());
-            mar.setRank(rank.getRank());
-            if(rank.getRank() == AllianceRankType.LEADER) ga.setLeaderId(mar.getCharacterId());
-            ga.add(mar);
+        //成员
+        List<AllianceGuildCharacterVO> members = allianceService.getMembers(a.getId());
+        for (AllianceGuildCharacterVO member : members) {
+            MapleAllianceCharacter agc = new MapleAllianceCharacter();
+            agc.setCharacterId(member.getCharacterId().intValue());
+            agc.setName(member.getName());
+            agc.setRank(agc.getRank());
+            if(agc.getRank() == AllianceRankType.LEADER) ga.setLeaderId(member.getCharacterId().intValue());
+            ga.getMembers().put(member.getCharacterId().intValue(), agc);
         }
         return ga;
     }
@@ -90,15 +102,6 @@ public class AllianceExecutor {
         MapleAlliance alliance = alliances.get(allianceId);
         if(ObjectUtil.isNull(alliance)) return null;
         return alliance.getLeaderId();
-    }
-
-    /**
-     * 是否为对应职级
-     */
-    public boolean isRank(Integer allianceId, Integer characterId, AllianceRankType type) {
-        MapleAlliance alliance = alliances.get(allianceId);
-        if(alliance == null) return false;
-        return alliance.isRank(characterId, type);
     }
 
     public AllianceRankType getRank(Integer allianceId, Integer characterId){
@@ -121,7 +124,7 @@ public class AllianceExecutor {
     public void leaveMember(Integer allianceId, Integer characterId) {
         MapleAlliance alliance = alliances.get(allianceId);
         if(alliance!= null) {
-            alliance.removeRank(characterId);
+            alliance.leaveMember(characterId);
         }
     }
 
@@ -143,7 +146,7 @@ public class AllianceExecutor {
         MapleAlliance alliance = getAlliance(allianceId);
         if(alliance == null) return;
 
-        alliance.removeGuild(guildId);
+        alliance.leaveGuild(guildId);
     }
 
     public void changeLeader(Integer allianceId, Integer characterId) {
@@ -163,12 +166,18 @@ public class AllianceExecutor {
         AllianceRankType nowRank = alliance.getRank(characterId);
         if(changeRank == nowRank) return;
 
-        alliance.setRank(characterId, changeRank);
+        alliance.changeRank(characterId, changeRank);
     }
 
     public void updateNotice(Integer allianceId, String notice) {
         final MapleAlliance alliance = getAlliance(allianceId);
         if(alliance == null) return;
         alliance.updateNotice(notice);
+    }
+
+    public void chat(Integer allianceId, String senderName, String content) {
+        final MapleAlliance alliance = getAlliance(allianceId);
+        if(alliance == null) return;
+        alliance.sendPacket(MessagePacketCreator.multiChat(senderName, content, ChatType.ALLIANCE));
     }
 }

@@ -1,15 +1,23 @@
 package cn.ms.dm.server.operation.world;
 
 import cn.hutool.core.util.ObjectUtil;
+import cn.ms.dm.core.utils.StreamUtils;
 import cn.ms.dm.domain.account.Characters;
 import cn.ms.dm.domain.guild.Guild;
+import cn.ms.dm.domain.guild.GuildRankTitle;
 import cn.ms.dm.domain.guild.vo.GuildCharacterVO;
 import cn.ms.dm.maple.constant.guild.GuildRankType;
+import cn.ms.dm.maple.constant.packet.ChatType;
+import cn.ms.dm.server.client.MapleCharacter;
 import cn.ms.dm.server.client.MapleGuild;
 import cn.ms.dm.server.client.MapleGuildCharacter;
+import cn.ms.dm.server.client.MaplePartyCharacter;
 import cn.ms.dm.server.database.service.CharacterService;
+import cn.ms.dm.server.database.service.GuildRankTitleService;
 import cn.ms.dm.server.database.service.GuildService;
+import cn.ms.dm.server.handling.channel.ChannelServerGroup;
 import cn.ms.dm.server.operation.WorldOperation;
+import cn.ms.dm.server.operation.packet.creator.MessagePacketCreator;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.google.common.collect.Lists;
@@ -21,6 +29,7 @@ import org.springframework.stereotype.Component;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
@@ -28,13 +37,14 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * @name GuildExecuter
  * @date 2026-03-03 15:31
  * @email lmtemail163@163.com
- * @description 公会
+ * @description 家族
  */
 @Component
-@Slf4j(topic = "【公会】")
+@Slf4j(topic = "【家族】")
 @RequiredArgsConstructor
 public class GuildExecutor {
     private final GuildService guildService;
+    private final GuildRankTitleService guildRankTitleService;
     private static final Map<Integer, MapleGuild> guilds = new LinkedHashMap<>();
     private static final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
 
@@ -61,6 +71,12 @@ public class GuildExecutor {
         gd.setName(g.getName());
         gd.setCapacity(g.getCapacity());
         gd.setAllianceId(g.getAllianceId().intValue());
+
+        List<GuildRankTitle> rankList = guildRankTitleService.list(Wrappers.lambdaQuery(GuildRankTitle.class).eq(GuildRankTitle::getGuildId, g.getId()));
+        for (GuildRankType type : GuildRankType.values()) {
+            Optional<GuildRankTitle> first = StreamUtils.findFirst(rankList, title -> title.getRank() == type);
+            gd.setRank(type.getCode(), first.isEmpty()? type.getTitle(): first.get().getTitle());
+        }
         //成员
         List<GuildCharacterVO> members = guildService.getMembers(g.getId());
         for (GuildCharacterVO character : members) {
@@ -164,5 +180,20 @@ public class GuildExecutor {
         final MapleGuild guild = guilds.get(guildId);
         if(guild == null) return;
         guild.expelMember(playerId);
+    }
+
+    public void chat(Integer guildId, String senderName, String content) {
+        MapleGuild guild = getGuild(guildId);
+        if(guild == null) return;
+
+        for (MapleGuildCharacter member : guild.getMembers()) {
+            if(member.getName().equals(senderName)) continue;
+
+            MapleCharacter character = ChannelServerGroup.getCharacter(member.getId());
+            if(character == null) continue;
+
+            character.sendPacket(MessagePacketCreator.multiChat(senderName, content, ChatType.GUILD));
+        }
+
     }
 }

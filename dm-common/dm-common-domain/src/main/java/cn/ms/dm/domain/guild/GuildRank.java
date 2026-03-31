@@ -26,6 +26,7 @@ import java.time.LocalDateTime;
 public class GuildRank extends BaseModel {
     @Serial
     private static final long serialVersionUID = -6648567980965008226L;
+
     @TableField
     @Schema(description = "家族ID")
     private Long guildId;

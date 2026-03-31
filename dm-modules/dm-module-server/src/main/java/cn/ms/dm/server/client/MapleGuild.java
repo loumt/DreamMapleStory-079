@@ -2,6 +2,7 @@ package cn.ms.dm.server.client;
 
 import cn.hutool.core.util.ObjectUtil;
 import cn.ms.dm.core.utils.StreamUtils;
+import cn.ms.dm.domain.guild.GuildRankTitle;
 import cn.ms.dm.maple.constant.guild.GuildRankType;
 import cn.ms.dm.server.handling.channel.ChannelServerGroup;
 import cn.ms.dm.server.operation.WorldOperation;
@@ -36,6 +37,8 @@ public class MapleGuild implements Serializable {
     private Integer allianceId;
     //邀请联盟ID
     private Integer invitedAllianceId;
+    //职级
+    private String[] ranks = new String[5];
     //公会成员
     private final List<MapleGuildCharacter> members = Lists.newCopyOnWriteArrayList();
 
@@ -82,7 +85,7 @@ public class MapleGuild implements Serializable {
     }
 
     public boolean isFull() {
-        return members.size() >= capacity;
+        return members.size() == capacity;
     }
 
     public boolean isMember(Integer playerId) {
@@ -100,5 +103,13 @@ public class MapleGuild implements Serializable {
                 //TODO 需要操作联盟数据
             }
         }
+    }
+
+    public String getRanks(int idx){
+        return ranks[idx];
+    }
+
+    public void setRank(int idx, String rank) {
+        ranks[idx] = rank;
     }
 }

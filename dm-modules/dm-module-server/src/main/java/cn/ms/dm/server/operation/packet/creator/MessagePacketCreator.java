@@ -1,5 +1,6 @@
 package cn.ms.dm.server.operation.packet.creator;
 
+import cn.ms.dm.maple.constant.packet.ChatType;
 import cn.ms.dm.maple.constant.packet.SendPacketOpcode;
 import cn.ms.dm.maple.netty.MaplePacketLittleEndianWriter;
 
@@ -87,6 +88,23 @@ public final class MessagePacketCreator {
         mplew.write(whiteBG ? 1 : 0);
         mplew.writeMapleAsciiString(text);
         mplew.write(show);
+        return mplew.getPacket();
+    }
+
+
+    /**
+     * 发送聊天数据
+     * @param senderName
+     * @param content
+     * @param mode //  0 buddychat; 1 partychat; 2 guildchat
+     * @return
+     */
+    public static byte[] multiChat(String senderName, String content, ChatType mode) {
+        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
+        mplew.writeShort(SendPacketOpcode.MULTICHAT.getValue());
+        mplew.write(mode.getMode());
+        mplew.writeMapleAsciiString(senderName);
+        mplew.writeMapleAsciiString(content);
         return mplew.getPacket();
     }
 }

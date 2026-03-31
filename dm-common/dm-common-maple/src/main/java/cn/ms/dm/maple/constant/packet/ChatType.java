@@ -13,16 +13,16 @@ import lombok.Getter;
 public enum ChatType {
     BUDDY(0, "好友聊天"),
     PARTY(1, "队伍聊天"),
-    GUILD(2, "公会聊天"),
+    GUILD(2, "家族聊天"),
     ALLIANCE(3, "联盟聊天"),
     ;
 
-    private final int code;
+    private final int mode;
     private final String type;
 
-    public static ChatType codeOf(int code){
+    public static ChatType modeOf(int mode){
         for (ChatType value : ChatType.values()) {
-            if(value.code == code) return value;
+            if(value.mode == mode) return value;
         }
         return null;
     }

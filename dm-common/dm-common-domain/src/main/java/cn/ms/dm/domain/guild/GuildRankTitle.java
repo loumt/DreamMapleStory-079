@@ -1,9 +1,7 @@
-package cn.ms.dm.domain.alliance;
+package cn.ms.dm.domain.guild;
 
 import cn.ms.dm.domain.base.BaseModel;
-import cn.ms.dm.maple.constant.alliance.AllianceRankType;
 import cn.ms.dm.maple.constant.guild.GuildRankType;
-import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -11,32 +9,32 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serial;
-import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
  * @author LouMT
- * @name AllianceRank
- * @date 2026-03-25 9:19
+ * @name GuildRankTitle
+ * @date 2026-03-30 16:57
  * @email lmtemail163@163.com
- * @description 公会联盟中的职级变化，
+ * @description
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@TableName("dm_alliance_rank")
-@Schema(description = "联盟职级")
-public class AllianceRank extends BaseModel {
+@TableName("dm_guild_rank_title")
+@Schema(description = "家族职级表")
+public class GuildRankTitle extends BaseModel {
     @Serial
-    private static final long serialVersionUID = -7030742471347123456L;
+    private static final long serialVersionUID = -8644355897380340319L;
     @TableField
-    @Schema(description = "联盟ID")
-    private Long allianceId;
+    @Schema(description = "家族ID")
+    private Long guildId;
 
     @TableField
     @Schema(description = "职级")
-    private AllianceRankType rank;
+    private GuildRankType rank;
 
     @TableField
     @Schema(description = "职级名称")
     private String title;
+
+
 }

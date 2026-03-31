@@ -96,7 +96,6 @@ CREATE TABLE `dm_alliance`
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='联盟表';
 
-
 DROP TABLE IF EXISTS `dm_alliance_guild`;
 CREATE TABLE `dm_alliance_guild`
 (
@@ -105,19 +104,28 @@ CREATE TABLE `dm_alliance_guild`
     `guild_id` bigint(20)  DEFAULT NULL COMMENT '公会ID',
     `join_time` datetime     DEFAULT NULL COMMENT '加入时间',
     PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='联盟公会表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='联盟家族表';
 
 DROP TABLE IF EXISTS `dm_alliance_rank`;
 CREATE TABLE `dm_alliance_rank`
 (
     `id`          bigint(20)       NOT NULL AUTO_INCREMENT COMMENT '主键',
     `alliance_id`   bigint(20)  NOT NULL COMMENT '联盟ID',
+    `rank` TINYINT(1)  DEFAULT NULL COMMENT '职级',
+    `title` VARCHAR(32)  DEFAULT NULL COMMENT '名称',
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='联盟职级表';
+
+DROP TABLE IF EXISTS `dm_alliance_guild_character`;
+CREATE TABLE `dm_alliance_guild_character`
+(
+    `id`          bigint(20)       NOT NULL AUTO_INCREMENT COMMENT '主键',
+    `alliance_id`   bigint(20)  NOT NULL COMMENT '联盟ID',
     `guild_id` bigint(20)  DEFAULT NULL COMMENT '公会ID',
     `character_id` bigint(20)  DEFAULT NULL COMMENT '角色ID',
     `rank` TINYINT(1)  DEFAULT NULL COMMENT '职级',
-    `create_time` datetime     DEFAULT NULL COMMENT '设置时间',
     PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='家族职级表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='联盟成员表';
 
 DROP TABLE IF EXISTS `dm_party`;
 CREATE TABLE `dm_party`
@@ -147,6 +155,16 @@ CREATE TABLE `dm_buddy`
     `buddy_id`     bigint(20)  NOT NULL COMMENT '好友ID',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='好友关系';
+
+
+DROP TABLE IF EXISTS `dm_buddy_slot`;
+CREATE TABLE `dm_buddy_slot`
+(
+    `id`           bigint(20)       NOT NULL AUTO_INCREMENT COMMENT '主键',
+    `character_id` bigint(30)  NOT NULL COMMENT '角色ID',
+    `slot`     int(4)  NOT NULL COMMENT '好友数量',
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='好友数量';
 
 
 DROP TABLE IF EXISTS `sys_fishing_reward`;
@@ -257,5 +275,19 @@ CREATE TABLE `item_inventory_equipment`
     `jump`                 smallint(6) NOT NULL DEFAULT '0',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT= 1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='物品清单-已装备';
+
+
+DROP TABLE IF EXISTS `dm_guild_invite`;
+CREATE TABLE `dm_guild_invite`
+(
+    `id`          bigint(20)       NOT NULL AUTO_INCREMENT COMMENT '主键',
+    `invitor_id` BIGINT(20) NOT NULL COMMENT '邀请人ID',
+    `guild_id` BIGINT(20) NOT NULL COMMENT '家族ID',
+    `acceptor_id` BIGINT(20) NOT NULL COMMENT '被邀请人ID',
+    `accept` TINYINT(1) DEFAULT NULL COMMENT '接收状态',
+    `accept_time` datetime     DEFAULT NULL COMMENT '接收时间',
+    `expire_time` datetime     DEFAULT NULL COMMENT '过期时间',
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='家族邀请';
 
 

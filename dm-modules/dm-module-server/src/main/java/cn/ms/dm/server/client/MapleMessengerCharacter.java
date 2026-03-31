@@ -21,4 +21,13 @@ public class MapleMessengerCharacter implements Serializable {
 
     private Integer id;
     private String name;
+    private int channelNo;
+    private boolean online;
+
+    public MapleMessengerCharacter(MapleCharacter character) {
+        this.id = character.getPlayerId();
+        this.name = character.getName();
+        this.channelNo = character.getClient().getChannelNo();
+        this.online = true;
+    }
 }

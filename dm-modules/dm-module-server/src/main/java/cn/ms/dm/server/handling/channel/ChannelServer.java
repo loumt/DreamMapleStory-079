@@ -110,4 +110,18 @@ public class ChannelServer extends BaseMapleServer {
     public Integer getCharacterSize() {
         return storage.getCharacterSize();
     }
+
+    /**
+     * 获取当前频道内的玩家-Method1
+     */
+    public MapleCharacter getCharacter(final Integer characterId){
+        return storage.getCharacterById(characterId);
+    }
+
+    /**
+     * 获取当前频道内的玩家-Method2
+     */
+    public MapleCharacter getCharacter(final String characterName){
+        return storage.getCharacterByName(characterName);
+    }
 }

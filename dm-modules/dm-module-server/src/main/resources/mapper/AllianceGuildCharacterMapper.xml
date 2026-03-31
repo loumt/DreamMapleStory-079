@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ms.dm.server.database.mapper.AllianceGuildCharacterMapper">
+    <resultMap type="cn.ms.dm.domain.alliance.vo.AllianceGuildCharacterVO" id="detailVO">
+        <result property="name" column="name"/>
+        <result property="characterId" column="character_id"/>
+        <result property="guildId" column="guild_id"/>
+        <result property="rank" column="rank"/>
+    </resultMap>
+
+    <select id="details" resultMap="detailVO">
+        SELECT
+
+        FROM
+            dm_alliance_guild_character
+        WHERE alliance_id = #{id}
+    </select>
+</mapper>

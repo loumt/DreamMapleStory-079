@@ -56,6 +56,7 @@ public class AllianceOpExecutor {
 
         MapleAlliance alliance = WorldOperation.Alliance.getAlliance(guild.getAllianceId());
         AllianceRankType allianceRank = WorldOperation.Alliance.getRank(alliance.getId(), characterId);
+        if(allianceRank == null) return;
 
         switch (operation){
             case LOAD: //获取联盟信息
@@ -70,13 +71,8 @@ public class AllianceOpExecutor {
             case ACCEPT_INVITE://接收邀请
                 handleAcceptInviteOperation(guild);
                 break;
-            case EXPEL: //驱逐，脱离
-                //TODO 检查一下这个数据的格式
-                if(slea.available() > 4) {
-                    guildId = slea.readInt();
-                    if(slea.available() > 4 && ObjectUtil.equal(guild.getAllianceId(), slea.readInt())) break;
-                }
-                WorldOperation.Alliance.removeGuild(guild.getAllianceId(), guildId);
+            case EXPEL: //驱逐
+                handleExpelOperation(client, slea, guild);
                 break;
             case CHANGE_LEADER://设置联盟长
                 if(allianceRank!= AllianceRankType.LEADER) break;
@@ -97,6 +93,22 @@ public class AllianceOpExecutor {
                 WorldOperation.Alliance.updateNotice(guild.getAllianceId(), notice);
                 break;
         }
+    }
+
+    /**
+     * 驱逐
+     * @param client
+     * @param slea
+     * @param guild
+     */
+    private void handleExpelOperation(MapleClient client, LittleEndianAccessor slea, MapleGuild guild) {
+        Integer guildId = client.getPlayer().getGuildId();
+        //TODO 检查一下这个数据的格式
+        if(slea.available() > 4) {
+            guildId = slea.readInt();
+            if(slea.available() > 4 && ObjectUtil.equal(guild.getAllianceId(), slea.readInt())) return;
+        }
+        WorldOperation.Alliance.removeGuild(guild.getAllianceId(), guildId);
     }
 
     @PacketHandler(ReceivePacketOpcode.DENY_ALLIANCE_REQUEST)
@@ -148,7 +160,7 @@ public class AllianceOpExecutor {
     }
 
     private void handleLeaveOperation(MapleClient client, MapleAlliance alliance) {
-        //尉氏县
+        //未实现
     }
 
     private void handleLoadOperation(MapleClient client, MapleAlliance alliance) {

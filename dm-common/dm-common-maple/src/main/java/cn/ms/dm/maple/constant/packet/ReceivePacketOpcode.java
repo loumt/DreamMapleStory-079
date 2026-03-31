@@ -88,7 +88,7 @@ public enum ReceivePacketOpcode implements WritableIntValueHolder {
     REWARD_ITEM,
     ITEM_MAKER,
     USE_TREASUER_CHEST,
-    PARTYCHAT,
+    PARTY_CHAT,
     WHISPER,
     MESSENGER,
     PLAYER_INTERACTION,

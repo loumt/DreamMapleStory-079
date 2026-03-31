@@ -60,6 +60,8 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements Se
     private MapleInventory[] inventory;
     //公会
     private MapleGuildCharacter mgc;
+    //聊天室
+    private MapleMessenger messenger;
 
     @Override
     public MapleMapObjectType getType() {

@@ -1,8 +1,12 @@
 package cn.ms.dm.server.operation.world;
 
 import cn.hutool.core.util.ObjectUtil;
+import cn.ms.dm.maple.constant.packet.ChatType;
+import cn.ms.dm.server.client.MapleCharacter;
 import cn.ms.dm.server.client.MapleParty;
 import cn.ms.dm.server.client.MaplePartyCharacter;
+import cn.ms.dm.server.handling.channel.ChannelServerGroup;
+import cn.ms.dm.server.operation.packet.creator.MessagePacketCreator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -36,5 +40,22 @@ public class PartyExecutor {
         MapleParty party = new MapleParty(partyId, character);
         parties.put(partyId, party);
         return party;
+    }
+
+    /**
+     * 聊天
+     */
+    public void chat(Integer partyId, String senderName, String content) {
+        MapleParty party = getParty(partyId);
+        if(party == null) return;
+
+        for (MaplePartyCharacter member : party.getMembers()) {
+            if(member.getName().equals(senderName)) continue;
+
+            MapleCharacter character = ChannelServerGroup.getCharacter(member.getId());
+            if(character == null) continue;
+
+            character.sendPacket(MessagePacketCreator.multiChat(senderName, content, ChatType.PARTY));
+        }
     }
 }

@@ -1,6 +1,7 @@
 package cn.ms.dm.domain.alliance;
 
 import cn.ms.dm.domain.base.BaseModel;
+import cn.ms.dm.maple.constant.alliance.AllianceRankType;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;

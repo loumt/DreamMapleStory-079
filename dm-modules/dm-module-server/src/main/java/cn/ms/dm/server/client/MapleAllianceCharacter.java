@@ -12,16 +12,17 @@ import java.io.Serializable;
  * @name MapleAllianceRank
  * @date 2026-03-25 11:22
  * @email lmtemail163@163.com
- * @description
+ * @description 联盟-玩家成员
  */
 @Getter
 @Setter
-public class MapleAllianceRank implements Serializable {
+public class MapleAllianceCharacter implements Serializable {
     @Serial
     private static final long serialVersionUID = 9064138739123769333L;
     //角色信息
     private Integer characterId;
     private String name;
+
     //职级
     private AllianceRankType rank;
 }
